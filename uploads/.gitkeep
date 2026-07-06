@@ -1,0 +1,7 @@
+# Ce dossier est réservé aux uploads de fichiers
+# Les fichiers uploadés seront stockés ici
+
+# Pour que Git reconnaisse ce dossier même s'il est vide,
+# ce fichier .gitkeep doit rester présent.
+
+# Permissions requises : 755 (lecture, écriture, exécution pour le serveur web)

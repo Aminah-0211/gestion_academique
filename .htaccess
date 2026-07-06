@@ -1,0 +1,114 @@
+# Configuration Apache pour Gestion Académique
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /gestion_academique/
+    
+    # Rediriger les requêtes non-fichiers vers index.php
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php?route=$1 [QSA,L]
+</IfModule>
+
+# Sécurité : Désactiver l'accès aux fichiers sensibles
+<Files "*.php">
+    Order allow,deny
+    Allow from all
+</Files>
+
+<Files "config/database.php">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<Files "config/session.php">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Désactiver la listage des répertoires
+<IfModule mod_autoindex.c>
+    Options -Indexes
+</IfModule>
+
+# Compression GZIP
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript
+</IfModule>
+
+# Cache des fichiers statiques
+<IfModule mod_expires.c>
+    ExpiresActive On
+    
+    # Images
+    ExpiresByType image/jpeg "access plus 30 days"
+    ExpiresByType image/gif "access plus 30 days"
+    ExpiresByType image/png "access plus 30 days"
+    ExpiresByType image/webp "access plus 30 days"
+    ExpiresByType image/svg+xml "access plus 30 days"
+    
+    # CSS
+    ExpiresByType text/css "access plus 7 days"
+    
+    # JavaScript
+    ExpiresByType application/javascript "access plus 7 days"
+    ExpiresByType text/javascript "access plus 7 days"
+    
+    # Polices
+    ExpiresByType font/woff "access plus 30 days"
+    ExpiresByType font/woff2 "access plus 30 days"
+    ExpiresByType application/font-woff "access plus 30 days"
+</IfModule>
+
+# Entêtes de sécurité
+<IfModule mod_headers.c>
+    # Empêcher l'attaque Clickjacking
+    Header always set X-Frame-Options "SAMEORIGIN"
+    
+    # Protection XSS
+    Header always set X-XSS-Protection "1; mode=block"
+    
+    # MIME sniffing
+    Header always set X-Content-Type-Options "nosniff"
+    
+    # Referrer Policy
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # Politique de sécurité du contenu (basique)
+    # À adapter selon vos besoins
+    # Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net; font-src 'self' cdnjs.cloudflare.com; img-src 'self' data: https:;"
+</IfModule>
+
+# Restriction d'accès aux répertoires sensibles
+<Directory "/gestion_academique/config">
+    Order allow,deny
+    Deny from all
+</Directory>
+
+<Directory "/gestion_academique/uploads">
+    # Autoriser le serveur à lire
+    Order allow,deny
+    Allow from all
+    
+    # Désactiver l'exécution de PHP dans ce répertoire
+    <IfModule mod_php.c>
+        php_flag engine off
+    </IfModule>
+    
+    # Alternative pour mod_php7
+    <FilesMatch "\.php$">
+        Deny from all
+    </FilesMatch>
+</Directory>
+
+# UTF-8 par défaut
+AddCharset UTF-8 .html .css .js .xml .json .php
+
+# Support des fichiers manquants (404)
+ErrorDocument 404 /gestion_academique/index.php
+
+# Support des accès non autorisés (403)
+ErrorDocument 403 /gestion_academique/index.php
+
+# Support des erreurs serveur (500)
+ErrorDocument 500 /gestion_academique/index.php

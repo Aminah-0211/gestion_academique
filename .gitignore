@@ -1,0 +1,50 @@
+# Fichiers à ignorer par Git
+
+# Configuration locale
+config/database.php
+config/local_config.php
+
+# Fichiers uploadés
+uploads/*
+!uploads/.gitkeep
+
+# Fichiers temporaires
+*.log
+*.tmp
+*.temp
+*.bak
+*.swp
+*~
+.DS_Store
+Thumbs.db
+
+# Éditeurs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.env
+*.env.local
+
+# Composer
+vendor/
+composer.lock
+
+# Node (si utilisation)
+node_modules/
+package-lock.json
+yarn.lock
+
+# Cache
+*.cache
+.cache/
+
+# Archives
+*.zip
+*.rar
+*.7z
+*.tar.gz
+
+# Fichiers système
+.DS_Store
+desktop.ini
